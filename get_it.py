@@ -1,34 +1,32 @@
-from time import ctime
+import pandas
 import ntplib
-from lxml import html
-from lxml import etree
-import requests
+import pymongo
+from time import ctime
+from pymongo import MongoClient
 
-page = requests.get('https://dph.georgia.gov/covid-19-daily-status-report')
-root = html.fromstring(page.content)
-tree = root.getroottree()
-print(tree)
-c = ntplib.NTPClient()
-response = c.request('us.pool.ntp.org', version=3)
-print(ctime(response.tx_time))
+def get_time():
+    c = ntplib.NTPClient()
+    response = c.request('us.pool.ntp.org', version=3)
+    return response.tx_time
+
+tables = pandas.read_html('https://dph.georgia.gov/covid-19-daily-status-report')
+time = get_time()
 
 
-lab_header = etree.fromstring(
-    r'<tr><th scope="col">Lab</th><th scope="col">Number of Positive Tests</th><th scope="col">Total Tests</th></tr>')
-print(lab_header)
-# print(tree.getpath(lab_header))
-print(root.xpath('//thead'))
-# print(etree.tostring(root, pretty_print=True))
-tables = root.xpath('//table')
 deaths = tables[0]
 tests = tables[1]
 counties = tables[2]
 
+records = []
+for t in tables:
+    t.columns = t.columns.str.replace(".", "_") # mongo doesn't like . in keys
+    records.extend(t.to_dict('records'))
+print(records)
 
-def print_element(ele):
-    print(etree.tostring(ele))
+client = MongoClient("mongodb://localhost:27017/")
 
+db = client["gacovid19"]
+# collection
+govnumbers = db["govnumbers"]
+govnumbers.insert_one({'time': time, 'data': records})
 
-print_element(deaths)
-print_element(tests)
-print_element(counties)
