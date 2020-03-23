@@ -1,1 +1,1 @@
-# get_ga_covid19_numbers
+Please refrain from overloading the server.
