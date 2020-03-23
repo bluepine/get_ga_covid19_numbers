@@ -1,7 +1,6 @@
 import pandas
 import ntplib
 import pymongo
-from time import ctime
 from pymongo import MongoClient
 
 def get_time():
@@ -13,15 +12,11 @@ tables = pandas.read_html('https://dph.georgia.gov/covid-19-daily-status-report'
 time = get_time()
 
 
-deaths = tables[0]
-tests = tables[1]
-counties = tables[2]
-
 records = []
 for t in tables:
     t.columns = t.columns.str.replace(".", "_") # mongo doesn't like . in keys
     records.extend(t.to_dict('records'))
-print(records)
+
 
 client = MongoClient("mongodb://localhost:27017/")
 
