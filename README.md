@@ -13,4 +13,6 @@ The scripts assume that you can access mongodb at mongodb://localhost:27017
 Please refrain from overloading the server. 
 
 Example cron job to fetch the data every hour:
+```console
 0 * * * * /home/swei/anaconda3/bin/python /home/swei/git/get_ga_covid19_numbers/get_it.py
+```
