@@ -7,8 +7,9 @@ Anaconda: https://www.anaconda.com/distribution/
 
 Mongodb: https://www.mongodb.com/
 
-The scripts assume that you can access mongodb at mongodb://localhost:27017
+pyppeteer: https://pypi.org/project/pyppeteer/
 
+The scripts assume that you can access mongodb at mongodb://localhost:27017
 
 Please refrain from overloading the server. 
 
