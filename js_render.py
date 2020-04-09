@@ -9,7 +9,6 @@ async def main(url, xpath):
     js_selector = f'''
     document.evaluate('{xpath}', document, null, XPathResult.ANY_TYPE,null).iterateNext().nodeValue
     '''
-    print(js_selector)
     html = await page.evaluate(js_selector, force_expr=True)
     await browser.close()
     return html

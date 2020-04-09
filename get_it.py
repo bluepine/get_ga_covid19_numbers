@@ -4,20 +4,15 @@ import ntplib
 import pymongo
 from lxml import etree
 from pymongo import MongoClient
-
+from js_render import js_render_xpath_text
 def get_time():
     c = ntplib.NTPClient()
     response = c.request('us.pool.ntp.org', version=3)
     return response.tx_time
 
-response = urllib.request.urlopen('https://dph.georgia.gov/covid-19-daily-status-report')
-html = response.read()
-response.close()
-print(html)
-dom = etree.HTML(html)
+iframe_url = js_render_xpath_text('https://dph.georgia.gov/covid-19-daily-status-report',
+                               '//*[@id="covid19dashdph"]/iframe/@src')
 
-iframe_url = dom.xpath('//*[@id="covid19dashdph"]/iframe/@src')
-print(iframe_url)
 #tables = pandas.read_html('https://dph.georgia.gov/covid-19-daily-status-report')
 tables = pandas.read_html(iframe_url)
 time = get_time()
