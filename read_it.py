@@ -12,4 +12,5 @@ for record in govnumbers.find():
     time = record['time']
     df = pd.DataFrame(record["data"])
     print(ctime(time))
-    print(df)
+    with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
+        print(df)
